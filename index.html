@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manjusha | Portfolio & Creative Hub</title>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body oncontextmenu="return false;">
 
+  <!-- Security Overlay against Copying/Screenshots -->
+  <div class="security-watermark">MANJUSHA PROTECTED PORTFOLIO</div>
+  <div class="watermark-grid">
+    <span>MANJUSHA</span><span>MANJUSHA</span><span>MANJUSHA</span><span>MANJUSHA</span>
+  </div>
+
+  <!-- Main App Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="avatar-ring" onclick="openProfileModal()">
+        <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Manjusha Profile">
+      </div>
+      <div class="header-info">
+        <h1 id="header-name">Manjusha <i class="fas fa-check-circle verified-badge" title="Verified Creator"></i></h1>
+        <p id="header-title">Psychologist & Technical Defence Specialist</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary" onclick="openUploadModal()"><i class="fas fa-plus-circle"></i> Create Post</button>
+      <button class="btn btn-secondary" onclick="openProfileModal()"><i class="fas fa-user-edit"></i> Edit Profile</button>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <div class="nav-filters">
+        <button class="filter-btn active" onclick="filterCategory('all')"><i class="fas fa-border-all"></i> All</button>
+        <button class="filter-btn" onclick="filterCategory('spiritual')"><i class="fas fa-om"></i> Spiritual</button>
+        <button class="filter-btn" onclick="filterCategory('psychology')"><i class="fas fa-brain"></i> Psychology</button>
+        <button class="filter-btn" onclick="filterCategory('technical')"><i class="fas fa-code"></i> Technical</button>
+        <button class="filter-btn" onclick="filterCategory('defence')"><i class="fas fa-shield-alt"></i> Defence</button>
+        <button class="filter-btn" onclick="filterCategory('regular')"><i class="fas fa-coffee"></i> Regular</button>
+      </div>
+      
+      <div class="nav-type">
+        <button class="type-btn active" id="type-all" onclick="filterType('all')"><i class="fas fa-layer-group"></i> All Media</button>
+        <button class="type-btn" id="type-image" onclick="filterType('image')"><i class="fas fa-image"></i> Photos</button>
+        <button class="type-btn" id="type-video" onclick="filterType('video')"><i class="fas fa-video"></i> Videos</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content Feed -->
+  <main class="feed-container">
+    <div class="feed-grid" id="feed-grid">
+      <!-- Posts render dynamically via JavaScript -->
+    </div>
+  </main>
+
+  <!-- Modal: Upload Content -->
+  <div class="modal-overlay" id="upload-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-cloud-upload-alt"></i> Share New Content</h3>
+        <button class="close-btn" onclick="closeModal('upload-modal')">&times;</button>
+      </div>
+      <form id="upload-form" onsubmit="handleUpload(event)">
+        <div class="form-group">
+          <label>Select Category</label>
+          <select id="upload-category" required>
+            <option value="spiritual">Spiritual</option>
+            <option value="psychology">Psychology</option>
+            <option value="technical">Technical</option>
+            <option value="defence">Defence</option>
+            <option value="regular">Regular</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Media File (Image / Video)</label>
+          <input type="file" id="upload-file" accept="image/*,video/*" required onchange="previewFile(event)">
+          <div id="file-preview-container" class="file-preview hidden"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Caption / Bio Note</label>
+          <textarea id="upload-caption" rows="3" placeholder="Write something inspiring..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-paper-plane"></i> Publish Work</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Profile -->
+  <div class="modal-overlay" id="profile-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-cog"></i> Edit Profile Information</h3>
+        <button class="close-btn" onclick="closeModal('profile-modal')">&times;</button>
+      </div>
+      <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+        <div class="form-group text-center">
+          <div class="avatar-edit-wrapper">
+            <img id="profile-preview-img" src="" alt="Profile Preview">
+            <label for="profile-photo-input" class="avatar-edit-badge"><i class="fas fa-camera"></i></label>
+            <input type="file" id="profile-photo-input" accept="image/*" class="hidden" onchange="previewProfilePhoto(event)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="edit-name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Bio / Tagline</label>
+          <textarea id="edit-title" rows="2" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Save Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Media View & Comments -->
+  <div class="modal-overlay" id="post-detail-modal">
+    <div class="modal-content modal-lg">
+      <button class="close-btn detail-close" onclick="closeModal('post-detail-modal')">&times;</button>
+      <div class="post-detail-wrapper" id="post-detail-body">
+        <!-- Expanded Post details dynamically injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
